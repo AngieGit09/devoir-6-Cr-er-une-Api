@@ -1,0 +1,22 @@
+{
+  "name": "api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "env-cmd -f ./env/.env-cmdrc.json -e development -- nodemon ./bin/www",
+    "start": "env-cmd -f ./env/.env-cmdrc.json -e development -- node ./bin/www",
+    "start:prod": "env-cmd -f ./env/.env-cmdrc.json -e production  -- node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "express": "^4.21.2",
+    "mongoose": "^8.18.0",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "env-cmd": "^11.0.0",
+    "nodemon": "^3.1.10"
+  }
+}
