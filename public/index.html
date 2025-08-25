@@ -1,13 +1,41 @@
 <html>
+  <head>
+    <title>Express</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
 
-<head>
-  <title>Express</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
-</head>
-
-<body>
-  <h1>Express</h1>
-  <p>Welcome to Express</p>
-</body>
-
+  <body style="font-family: system-ui; max-width: 640px; margin: 2rem auto">
+    <h1>API – Port de plaisance</h1>
+    <p>Connecte-toi pour accéder au tableau de bord.</p>
+    <form id="login">
+      <input name="email" type="email" placeholder="Email" required /><br />
+      <input
+        name="password"
+        type="password"
+        placeholder="Mot de passe"
+        required
+      /><br />
+      <button>Se connecter</button>
+    </form>
+    <p id="msg"></p>
+    <p><a href="/docs" target="_blank">Documentation de l’API (Swagger)</a></p>
+    <script>
+      document.getElementById("login").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(e.target).entries());
+        const r = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const j = await r.json();
+        if (r.ok) {
+          localStorage.setItem("token", j.token);
+          location.href = "/dashboard.html";
+        } else {
+          document.getElementById("msg").textContent = j.error || "Erreur";
+        }
+      });
+    </script>
+  </body>
 </html>

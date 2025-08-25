@@ -3,7 +3,7 @@ var router = express.Router();
 
 const userRoute = require("../routes/users");
 
-/* GET home page. */
+/* page d'accueil */
 router.get("/", async (req, res, next) => {
   res.status(200).json({
     name: process.env.APP_NAME,

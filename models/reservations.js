@@ -6,27 +6,17 @@ const reservationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Catway",
       required: true,
+      index: true,
     },
-    boatName: { type: String, required: true },
-    clientName: { type: String, required: true },
-    clientEmail: { type: String, required: true },
+    catwayNumber: { type: Number, required: true, index: true },
+    clientName: { type: String, required: true, trim: true },
+    boatName: { type: String, required: true, trim: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
-    status: {
-      type: String,
-      enum: ["pending", "confirmed", "cancelled"],
-      default: "confirmed",
-    },
   },
   { timestamps: true }
 );
 
-// petite validation logique sur les dates
-reservationSchema.pre("validate", function (next) {
-  if (this.startDate && this.endDate && this.endDate < this.startDate) {
-    return next(new Error("endDate doit être >= startDate"));
-  }
-  next();
-});
+reservationSchema.index({ catway: 1, startDate: 1, endDate: 1 });
 
 module.exports = mongoose.model("Reservation", reservationSchema);

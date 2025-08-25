@@ -3,12 +3,14 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
 
 // Connexion MongoDB (env-cmd charge les variables)
 require("./db/mongo").initClientDbConnection?.();
 
 // Routers
-const catwaysRouter = require("./routes/cataways");
+const catwaysRouter = require("./routes/catways");
 
 const app = express();
 
@@ -63,6 +65,24 @@ app.post("/api/auth/login", (req, res) =>
 app.post("/api/auth/logout", (req, res) =>
   res.json({ todo: "Déconnexion (à implémenter)" })
 );
+
+const swaggerSpec = swaggerJsdoc({
+  definition: {
+    openapi: "3.0.0",
+    info: { title: "API Port de plaisance", version: "1.0.0" },
+    components: {
+      securitySchemes: {
+        bearerAuth: { type: "http", scheme: "bearer", bearerFormat: "JWT" },
+      },
+    },
+    servers: [{ url: "http://localhost:" + (process.env.PORT || 3000) }],
+  },
+  // Swagger va lire les commentaires @swagger dans tous tes fichiers de routes
+  apis: ["./routes/*.js"],
+});
+
+// /docs affichera l'UI interactive
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // --- 404 JSON (à garder en dernier)
 app.use((req, res) => {
