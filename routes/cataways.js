@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Catway = require("../models/cataways");
 const Reservation = require("../models/reservations");
+const { requireAuth } = require("../middlewares/authentifications");
 
 // -------- CATWAYS CRUD --------
 
@@ -189,6 +190,44 @@ router.delete("/:number/reservations/:id", async (req, res, next) => {
     res.json({ deleted: true });
   } catch (e) {
     next(e);
+  }
+});
+
+// CREATE  (POST /api/catways)
+router.post("/", requireAuth, async (req, res, next) => {
+  try {
+    const created = await Catway.create(req.body);
+    res.status(201).json(created);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// UPDATE  (PUT /api/catways/:number)
+router.put("/:number", requireAuth, async (req, res, next) => {
+  try {
+    const number = Number(req.params.number);
+    const updated = await Catway.findOneAndUpdate(
+      { catwayNumber: number },
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!updated) return res.status(404).json({ error: "Catway introuvable" });
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE  (DELETE /api/catways/:number)
+router.delete("/:number", requireAuth, async (req, res, next) => {
+  try {
+    const number = Number(req.params.number);
+    const deleted = await Catway.findOneAndDelete({ catwayNumber: number });
+    if (!deleted) return res.status(404).json({ error: "Catway introuvable" });
+    res.json({ deleted: true });
+  } catch (err) {
+    next(err);
   }
 });
 
