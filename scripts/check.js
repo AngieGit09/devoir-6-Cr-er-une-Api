@@ -4,7 +4,7 @@ const Reservation = require("../models/reservations");
 
 (async () => {
   try {
-    await mongoose.connect(process.env.URL_MONGO); // la DB 'apinode' est déjà dans ton URL ou fixée dans le code
+    await mongoose.connect(process.env.URL_MONGO);
     console.log("DB :", mongoose.connection.name);
     const catways = await Catway.countDocuments();
     const reservations = await Reservation.countDocuments();
